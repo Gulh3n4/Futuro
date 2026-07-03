@@ -1,278 +1,291 @@
-Entendido. Se o Netlify Agent respondeu que criou o arquivo mas você não viu mudanças na tela, é porque ele salvou as alterações no código, mas o servidor local dele ou o preview de desenvolvimento não forçou a atualização visual imediata na sua aba (cache técnico de renderização do Codex).
-
-Para resolver isso e já aplicar o efeito dinâmico das imagens empilhadas abrindo em leque lateral conforme mostrado em `aaaaa.jpg` e `mouse.jpg`, envie o comando abaixo diretamente para o agente do Netlify.
-
-O script abaixo reconstrói a estrutura com as três camadas de cartões idênticas às imagens anexadas e injeta a animação em CSS puro para o efeito `hover`.
-
-### Comando para colar no Agente do Netlify:
-
-```text
-Substitua o conteúdo do arquivo index.html pelo código abaixo para renderizar os cartões em leque conforme os arquivos aaaaa.jpg e mouse.jpg, forçando a atualização do preview:
-
-```
-
-```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gráfica Futuro & Innova Brindes</title>
+    
+    <!-- Fontes e Bibliotecas -->
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <!-- Reutilizando seu CSS enviado anteriormente e expandindo -->
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        /* [Inserindo as variáveis e estilos base do seu arquivo original] */
+        :root {
+            --cream: #faf8f5;
+            --kraft: #c6a77b;
+            --sage: #8fa68a;
+            --indigo: #111c5a;
+            --cyan: #31e6ff;
+            --ink: #111216;
+            --max-width: 1200px;
         }
 
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
         body {
-            background-color: #f4f3eb; /* Fundo claro idêntico ao das imagens aaaaa.jpg e mouse.jpg */
-            color: #0b0d1b;
+            font-family: 'Afacad', sans-serif;
+            background: var(--cream);
+            color: var(--ink);
+            overflow-x: hidden; /* Evita scroll horizontal */
             line-height: 1.6;
-            overflow-x: hidden;
         }
 
-        header {
+        /* Ajuste de Tamanho Original (Responsivo sem Zoom) */
+        .container {
+            width: 90%;
+            max-width: var(--max-width);
+            margin: 0 auto;
+        }
+
+        /* --- NAVEGAÇÃO --- */
+        .site-nav {
             position: fixed;
             top: 20px;
             left: 50%;
             transform: translateX(-50%);
-            width: 90%;
-            max-width: 1200px;
+            width: min(1120px, 95%);
             background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(0, 0, 0, 0.05);
+            backdrop-filter: blur(15px);
             border-radius: 50px;
-            padding: 12px 30px;
+            padding: 10px 25px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             z-index: 1000;
+            border: 1px solid rgba(0,0,0,0.1);
         }
 
-        .logo-area {
-            font-weight: bold;
-            font-size: 1.1rem;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
+        .nav-links { display: flex; gap: 20px; }
+        .nav-links a { text-decoration: none; font-weight: 700; color: var(--indigo); font-size: 0.9rem; }
 
-        nav {
+        /* --- HERO SECTION --- */
+        .hero {
+            height: 100vh;
             display: flex;
-            gap: 15px;
+            align-items: center;
+            background: radial-gradient(circle at top right, #eef1e8, var(--cream));
+            padding-top: 80px;
+            position: relative;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 40px;
             align-items: center;
         }
 
-        nav a {
-            color: #0b0d1b;
-            text-decoration: none;
-            font-size: 0.9rem;
-            padding: 8px 16px;
+        .hero-text h1 {
+            font-family: 'Archivo', sans-serif;
+            font-size: clamp(3rem, 8vw, 6rem);
+            line-height: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .hero-text span { color: var(--purple); }
+
+        .hero-image-stack {
+            position: relative;
+            height: 500px;
+        }
+
+        /* Animação Flutuante para os Produtos */
+        .floating-img {
+            position: absolute;
             border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(2deg); }
+        }
+
+        /* --- SEÇÕES DE CONTEÚDO (Baseadas no PDF) --- */
+        .section { padding: 100px 0; }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        /* Estilo dos Cards do Portfolio (Baseado na pág 8 do PDF Innova) */
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            transition: 0.4s;
+            border: 1px solid transparent;
+        }
+        .card:hover { 
+            transform: translateY(-10px); 
+            border-color: var(--kraft);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.05);
+        }
+
+        /* --- SEÇÃO ECO (PDF 3) --- */
+        .eco-banner {
+            background: #1f2b18;
+            color: white;
+            border-radius: 40px;
+            padding: 60px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .eco-img {
+            flex: 1;
+            min-width: 300px;
+            border-radius: 20px;
+        }
+
+        /* --- FORMULÁRIO (Seu código original estilizado) --- */
+        .lead-section {
+            background: var(--indigo);
+            color: white;
+            padding: 100px 0;
+        }
+
+        .lead-form input, .lead-form textarea {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 15px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            border-radius: 10px;
+        }
+
+        .btn-submit {
+            background: var(--cyan);
+            color: var(--indigo);
+            padding: 15px 40px;
+            border-radius: 50px;
+            border: none;
+            font-weight: 800;
+            cursor: pointer;
             transition: 0.3s;
         }
 
-        nav a.active {
-            background: #dad9d0;
-        }
+        .btn-submit:hover { transform: scale(1.05); filter: brightness(1.1); }
 
-        .container {
-            width: 100%;
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 40px;
-        }
-
-        #home {
-            padding-top: 180px;
-            padding-bottom: 100px;
-        }
-
-        .home-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 60px;
-            align-items: center;
-        }
-
-        /* CONTAINER DA ANIMAÇÃO EM LEQUE (Baseado em aaaaa.jpg e mouse.jpg) */
-        .cards-animation-container {
-            position: relative;
-            width: 100%;
-            height: 450px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-        }
-
-        /* Estrutura base dos cartões empilhados */
-        .animated-card {
-            position: absolute;
-            width: 280px;
-            height: 380px;
-            border-radius: 12px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.12);
-            transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
-            transform-origin: bottom center;
-        }
-
-        /* Camada 1: Cartão de Trás (Bege/Texturizado) */
-        .card-layer-back {
-            background: #decba5;
-            background-image: repeating-linear-gradient(90deg, rgba(0,0,0,0.03), rgba(0,0,0,0.03) 10px, transparent 10px, transparent 20px);
-            transform: rotate(-12deg) translate(-20px, -15px);
-            z-index: 1;
-        }
-
-        /* Camada 2: Cartão do Meio (Roxo/Azul Royal vibrante) */
-        .card-layer-middle {
-            background: #3b22cf;
-            box-shadow: 0 25px 50px rgba(59, 34, 207, 0.25);
-            transform: rotate(5deg) translate(15px, -5px);
-            z-index: 2;
-        }
-
-        /* Camada 3: Cartão da Frente (Preto com linhas verticais finas) */
-        .card-layer-front {
-            background: #111319;
-            background-image: linear-gradient(90deg, transparent 95%, rgba(99, 102, 241, 0.15) 95%);
-            background-size: 30px 100%;
-            transform: rotate(0deg) translate(0, 20px);
-            z-index: 3;
-        }
-
-        /* EFEITO AO PASSAR O MOUSE (Abre em leque para o lado como em mouse.jpg) */
-        .cards-animation-container:hover .card-layer-back {
-            transform: rotate(-22deg) translate(-80px, -30px);
-        }
-
-        .cards-animation-container:hover .card-layer-middle {
-            transform: rotate(12deg) translate(70px, -15px);
-        }
-
-        .cards-animation-container:hover .card-layer-front {
-            transform: rotate(2deg) translate(10px, 35px);
-        }
-
-        /* LADO DIREITO: TEXTOS INJETADOS */
-        .home-text .tagline {
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-weight: 700;
-            color: #555868;
-            margin-bottom: 10px;
-            display: block;
-        }
-
-        .home-text h1 {
-            font-size: 4.5rem;
-            line-height: 0.95;
-            font-weight: 900;
-            letter-spacing: -2px;
-            margin-bottom: 25px;
-        }
-
-        .home-text p {
-            font-size: 1.1rem;
-            color: #4a4d5e;
-            max-width: 480px;
-            margin-bottom: 35px;
-        }
-
-        .cta-group {
-            display: flex;
-            gap: 15px;
-        }
-
-        .btn-primary {
-            background: #192019;
-            color: #ffffff;
-            padding: 14px 28px;
-            border-radius: 30px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.95rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: #192019;
-            padding: 14px 28px;
-            border-radius: 30px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.95rem;
-            border: 1px solid rgba(0,0,0,0.15);
-        }
-
-        @media (max-width: 968px) {
-            .home-grid {
-                grid-template-columns: 1fr;
-            }
-            .home-text h1 {
-                font-size: 3rem;
-            }
-            .cards-animation-container {
-                order: -1;
-                height: 380px;
-            }
-            .animated-card {
-                width: 200px;
-                height: 280px;
-            }
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .hero-grid { grid-template-columns: 1fr; text-align: center; }
+            .hero-image-stack { height: 300px; order: -1; }
+            .site-nav .nav-links { display: none; }
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="logo-area">Gráfica Futuro</div>
-        <nav>
-            <a href="#home" class="active">Raiz ecológica</a>
-            <a href="#branding">Branding premium</a>
-            <a href="#producao">Produção tecnológica</a>
-        </nav>
-    </header>
+    <nav class="site-nav">
+        <div class="brand-mark">
+            <strong>GRÁFICA FUTURO / INNOVA</strong>
+        </div>
+        <div class="nav-links">
+            <a href="#solucoes">Soluções</a>
+            <a href="#portfolio">Portfólio</a>
+            <a href="#eco">Sustentabilidade</a>
+            <a href="#contato">Orçamento</a>
+        </div>
+    </nav>
 
-    <main>
-        <section id="home">
-            <div class="container">
-                <div class="home-grid">
-                    
-                    <!-- LADO ESQUERDO: INTERAÇÃO DE LEQUE (aaaaa.jpg & mouse.jpg) -->
-                    <div class="cards-animation-container">
-                        <div class="animated-card card-layer-back"></div>
-                        <div class="animated-card card-layer-middle"></div>
-                        <div class="animated-card card-layer-front"></div>
-                    </div>
-
-                    <!-- LADO DIREITO: TEXTO E DIRECIONAMENTO -->
-                    <div class="home-text">
-                        <span class="tagline">Comunicação Visual e Brindes Personalizados</span>
-                        <h1>Gráfica<br>Futuro</h1>
-                        <p>Ecologia, branding premium e produção tecnológica. Uma jornada visual contínua para marcas que buscam presença com propósito.</p>
-                        
-                        <div class="cta-group">
-                            <a href="#" class="btn-primary">Solicitar orçamento ↗</a>
-                            <a href="#" class="btn-secondary">Ver capacidades</a>
-                        </div>
-                    </div>
-
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <div class="container hero-grid">
+            <div class="hero-text" data-aos="fade-up">
+                <p class="eyebrow">Desafios comerciais. Soluções imediatas.</p>
+                <h1>Onde a ideia <span>imprime</span> a realidade.</h1>
+                <p>Especialistas em comunicação visual e brindes personalizados que conectam marcas a pessoas.</p>
+                <div style="margin-top: 30px;">
+                    <a href="#contato" class="btn-submit" style="text-decoration: none;">Começar meu Projeto</a>
                 </div>
             </div>
-        </section>
-    </main>
+            <div class="hero-image-stack">
+                <!-- Imagem representando o mix de produtos do PDF 1 e 2 -->
+                <img src="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&q=80&w=400" 
+                     class="floating-img" style="top: 0; right: 0; width: 280px; z-index: 2;" alt="Brindes Premium">
+                <img src="https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&q=80&w=400" 
+                     class="floating-img" style="bottom: 0; left: 0; width: 250px; animation-delay: 1s;" alt="Impressão Digital">
+            </div>
+        </div>
+    </section>
 
+    <!-- TRÊS PILARES (Conteúdo dos PDFs) -->
+    <section id="solucoes" class="section container">
+        <div class="grid-3">
+            <div class="card" data-aos="fade-up" data-aos-delay="100">
+                <h3>01. Versatilidade</h3>
+                <p>De adesivos a totens complexos. Se existe o material, a gente imprime a ideia. Trabalhamos com MDF, Acrílico, Metal e mais.</p>
+            </div>
+            <div class="card" data-aos="fade-up" data-aos-delay="200">
+                <h3>02. Experiência 360°</h3>
+                <p>Cuidamos do projeto do briefing à entrega final. Verticalização que garante qualidade e prazos imbatíveis.</p>
+            </div>
+            <div class="card" data-aos="fade-up" data-aos-delay="300">
+                <h3>03. Alcance Nacional</h3>
+                <p>Onde sua marca estiver, a Futuro estará junto. Logística eficiente para todo o Brasil.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SEÇÃO ECO (PDF 3) -->
+    <section id="eco" class="section container">
+        <div class="eco-banner" data-aos="zoom-in">
+            <div style="flex: 1; min-width: 300px;">
+                <h2 style="font-size: 3rem; margin-bottom: 20px;">Consciência & Inovação</h2>
+                <p>Nossa linha ecológica utiliza papel semente e kraft reciclado. Transforme seu brinde em vida: crachás e convites que podem ser plantados.</p>
+                <ul style="margin-top: 20px; list-style: none;">
+                    <li>✓ Papel Kraft 100% Reciclável</li>
+                    <li>✓ Copos Biodegradáveis</li>
+                    <li>✓ Brindes em Bambu</li>
+                </ul>
+            </div>
+            <img src="https://images.unsplash.com/photo-1586075010633-2470bb205e8a?auto=format&fit=crop&q=80&w=600" class="eco-img" alt="Papel Kraft Sustentável">
+        </div>
+    </section>
+
+    <!-- FORMULÁRIO DE CONTATO -->
+    <section id="contato" class="lead-section">
+        <div class="container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 50px;">
+            <div data-aos="fade-right">
+                <h2>Pronto para destacar sua marca?</h2>
+                <p style="margin-top: 20px; opacity: 0.8;">Agende uma reunião estratégica e dê vida à identidade visual da sua empresa.</p>
+                <div style="margin-top: 40px;">
+                    <p><strong>Nossas Expertises:</strong></p>
+                    <p>• Comunicação Visual • Brindes • Papelaria Editorial</p>
+                </div>
+            </div>
+
+            <!-- Formulário Funcional (Conectado ao seu Netlify) -->
+            <form name="orcamento-grafica-futuro" method="POST" data-netlify="true" class="lead-form" data-aos="fade-left">
+                <input type="hidden" name="form-name" value="orcamento-grafica-futuro" />
+                <input type="text" name="nome" placeholder="Seu Nome" required />
+                <input type="email" name="email" placeholder="E-mail Corporativo" required />
+                <input type="tel" name="whatsapp" placeholder="WhatsApp" />
+                <textarea name="mensagem" rows="4" placeholder="Fale sobre seu projeto (ex: 500 ecobags)"></textarea>
+                <button type="submit" class="btn-submit">Enviar Solicitação</button>
+            </form>
+        </div>
+    </section>
+
+    <footer style="padding: 40px; text-align: center; opacity: 0.6; font-size: 0.8rem;">
+        <p>© 2024 Gráfica Futuro & Innova Brindes. Todos os direitos reservados.</p>
+    </footer>
+
+    <!-- Scripts de Animação -->
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 1000,
+            once: true,
+            offset: 100
+        });
+    </script>
 </body>
 </html>
-
-```
-
-Copie as linhas acima, envie ao agente do Netlify e recarregue a aba do seu navegador assim que ele concluir as 6 ações. O efeito de abertura lateral será executado perfeitamente ao passar o cursor sobre as camadas.
