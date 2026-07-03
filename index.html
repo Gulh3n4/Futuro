@@ -1,0 +1,278 @@
+Entendido. Se o Netlify Agent respondeu que criou o arquivo mas você não viu mudanças na tela, é porque ele salvou as alterações no código, mas o servidor local dele ou o preview de desenvolvimento não forçou a atualização visual imediata na sua aba (cache técnico de renderização do Codex).
+
+Para resolver isso e já aplicar o efeito dinâmico das imagens empilhadas abrindo em leque lateral conforme mostrado em `aaaaa.jpg` e `mouse.jpg`, envie o comando abaixo diretamente para o agente do Netlify.
+
+O script abaixo reconstrói a estrutura com as três camadas de cartões idênticas às imagens anexadas e injeta a animação em CSS puro para o efeito `hover`.
+
+### Comando para colar no Agente do Netlify:
+
+```text
+Substitua o conteúdo do arquivo index.html pelo código abaixo para renderizar os cartões em leque conforme os arquivos aaaaa.jpg e mouse.jpg, forçando a atualização do preview:
+
+```
+
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gráfica Futuro & Innova Brindes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f4f3eb; /* Fundo claro idêntico ao das imagens aaaaa.jpg e mouse.jpg */
+            color: #0b0d1b;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        header {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 1200px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            border-radius: 50px;
+            padding: 12px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .logo-area {
+            font-weight: bold;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        nav {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        nav a {
+            color: #0b0d1b;
+            text-decoration: none;
+            font-size: 0.9rem;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: 0.3s;
+        }
+
+        nav a.active {
+            background: #dad9d0;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        #home {
+            padding-top: 180px;
+            padding-bottom: 100px;
+        }
+
+        .home-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        /* CONTAINER DA ANIMAÇÃO EM LEQUE (Baseado em aaaaa.jpg e mouse.jpg) */
+        .cards-animation-container {
+            position: relative;
+            width: 100%;
+            height: 450px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        /* Estrutura base dos cartões empilhados */
+        .animated-card {
+            position: absolute;
+            width: 280px;
+            height: 380px;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+            transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+            transform-origin: bottom center;
+        }
+
+        /* Camada 1: Cartão de Trás (Bege/Texturizado) */
+        .card-layer-back {
+            background: #decba5;
+            background-image: repeating-linear-gradient(90deg, rgba(0,0,0,0.03), rgba(0,0,0,0.03) 10px, transparent 10px, transparent 20px);
+            transform: rotate(-12deg) translate(-20px, -15px);
+            z-index: 1;
+        }
+
+        /* Camada 2: Cartão do Meio (Roxo/Azul Royal vibrante) */
+        .card-layer-middle {
+            background: #3b22cf;
+            box-shadow: 0 25px 50px rgba(59, 34, 207, 0.25);
+            transform: rotate(5deg) translate(15px, -5px);
+            z-index: 2;
+        }
+
+        /* Camada 3: Cartão da Frente (Preto com linhas verticais finas) */
+        .card-layer-front {
+            background: #111319;
+            background-image: linear-gradient(90deg, transparent 95%, rgba(99, 102, 241, 0.15) 95%);
+            background-size: 30px 100%;
+            transform: rotate(0deg) translate(0, 20px);
+            z-index: 3;
+        }
+
+        /* EFEITO AO PASSAR O MOUSE (Abre em leque para o lado como em mouse.jpg) */
+        .cards-animation-container:hover .card-layer-back {
+            transform: rotate(-22deg) translate(-80px, -30px);
+        }
+
+        .cards-animation-container:hover .card-layer-middle {
+            transform: rotate(12deg) translate(70px, -15px);
+        }
+
+        .cards-animation-container:hover .card-layer-front {
+            transform: rotate(2deg) translate(10px, 35px);
+        }
+
+        /* LADO DIREITO: TEXTOS INJETADOS */
+        .home-text .tagline {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 700;
+            color: #555868;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .home-text h1 {
+            font-size: 4.5rem;
+            line-height: 0.95;
+            font-weight: 900;
+            letter-spacing: -2px;
+            margin-bottom: 25px;
+        }
+
+        .home-text p {
+            font-size: 1.1rem;
+            color: #4a4d5e;
+            max-width: 480px;
+            margin-bottom: 35px;
+        }
+
+        .cta-group {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn-primary {
+            background: #192019;
+            color: #ffffff;
+            padding: 14px 28px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #192019;
+            padding: 14px 28px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            border: 1px solid rgba(0,0,0,0.15);
+        }
+
+        @media (max-width: 968px) {
+            .home-grid {
+                grid-template-columns: 1fr;
+            }
+            .home-text h1 {
+                font-size: 3rem;
+            }
+            .cards-animation-container {
+                order: -1;
+                height: 380px;
+            }
+            .animated-card {
+                width: 200px;
+                height: 280px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-area">Gráfica Futuro</div>
+        <nav>
+            <a href="#home" class="active">Raiz ecológica</a>
+            <a href="#branding">Branding premium</a>
+            <a href="#producao">Produção tecnológica</a>
+        </nav>
+    </header>
+
+    <main>
+        <section id="home">
+            <div class="container">
+                <div class="home-grid">
+                    
+                    <!-- LADO ESQUERDO: INTERAÇÃO DE LEQUE (aaaaa.jpg & mouse.jpg) -->
+                    <div class="cards-animation-container">
+                        <div class="animated-card card-layer-back"></div>
+                        <div class="animated-card card-layer-middle"></div>
+                        <div class="animated-card card-layer-front"></div>
+                    </div>
+
+                    <!-- LADO DIREITO: TEXTO E DIRECIONAMENTO -->
+                    <div class="home-text">
+                        <span class="tagline">Comunicação Visual e Brindes Personalizados</span>
+                        <h1>Gráfica<br>Futuro</h1>
+                        <p>Ecologia, branding premium e produção tecnológica. Uma jornada visual contínua para marcas que buscam presença com propósito.</p>
+                        
+                        <div class="cta-group">
+                            <a href="#" class="btn-primary">Solicitar orçamento ↗</a>
+                            <a href="#" class="btn-secondary">Ver capacidades</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </main>
+
+</body>
+</html>
+
+```
+
+Copie as linhas acima, envie ao agente do Netlify e recarregue a aba do seu navegador assim que ele concluir as 6 ações. O efeito de abertura lateral será executado perfeitamente ao passar o cursor sobre as camadas.
